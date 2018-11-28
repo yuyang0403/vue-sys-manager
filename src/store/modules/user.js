@@ -67,16 +67,14 @@ const user = {
             reject('error')
           }
           const data = response.data
-
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
+          if (data.roleList && data.roleList.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', data.roleList)
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
-
-          commit('SET_NAME', data.name)
+          commit('SET_NAME', data.trueName)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
+          commit('SET_INTRODUCTION', data.desc)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -128,10 +126,11 @@ const user = {
         setToken(role)
         getUserInfo(role).then(response => {
           const data = response.data
-          commit('SET_ROLES', data.roles)
-          commit('SET_NAME', data.name)
+          console.log(data)
+          commit('SET_ROLES', data.roleList)
+          commit('SET_NAME', data.trueName)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
+          commit('SET_INTRODUCTION', data.desc)
           dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
           resolve()
         })
