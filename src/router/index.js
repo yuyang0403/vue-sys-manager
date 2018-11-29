@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { findRouterFromServer } from '@/api/router.js'
+import { getToken } from '@/utils/auth'
 
 Vue.use(Router)
 
@@ -134,19 +135,20 @@ export default new Router({
   routes: constantRouterMap
 })
 export const asyncRouterMap = []
-
-findRouterFromServer().then(response => {
-  const data = response.data
-  data.forEach(element => {
-    asyncRouterMap.push({
-      path: element.path,
-      component: () => import(element.component),
-      meta: { title: element.title, icon: element.icon },
-      name: element.name,
-      children: getChildren(element.children)
+if (getToken()) {
+  findRouterFromServer().then(response => {
+    const data = response.data
+    data.forEach(element => {
+      asyncRouterMap.push({
+        path: element.path,
+        component: () => import(element.component),
+        meta: { title: element.title, icon: element.icon },
+        name: element.name,
+        children: getChildren(element.children)
+      })
     })
   })
-})
+}
 
 // 递归拼接router
 function getChildren(children) {
