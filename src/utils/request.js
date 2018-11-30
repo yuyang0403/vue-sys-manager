@@ -46,7 +46,7 @@ service.interceptors.response.use(
           error.message = '登录失败，用户名或者密码有误！'
           break
         default:
-          error.message = '链接错误${error.response.status}'
+          error.message = error.response.data.errorMessage
           break
       }
     }
