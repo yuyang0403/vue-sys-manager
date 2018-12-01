@@ -45,6 +45,12 @@ service.interceptors.response.use(
         case 100003:
           error.message = '登录失败，用户名或者密码有误！'
           break
+        case 500:
+          error.message = '服务器异常！请稍后再试'
+          break
+        case 400:
+          error.message = '请求参数有误！'
+          break
         default:
           error.message = error.response.data.errorMessage
           break

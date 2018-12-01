@@ -15,7 +15,7 @@ const tableRouter = {
   children: [
     {
       path: 'user-manager',
-      component: () => import('@/views/table/complexTable'),
+      component: () => import('@/views/system_manager/user_manager'),
       name: 'user-manager',
       meta: { code: 'user_manager', title: 'user_manager', icon: 'user' }
     },

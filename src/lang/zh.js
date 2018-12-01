@@ -70,18 +70,10 @@ export default {
     dynamicTips2: '不固定表头, 按照点击顺序排序',
     dragTips1: '默认顺序',
     dragTips2: '拖拽后顺序',
-    title: '标题',
-    importance: '重要性',
-    type: '类型',
-    remark: '点评',
     search: '搜索',
     add: '添加',
     export: '导出',
-    reviewer: '审核人',
     id: '序号',
-    date: '时间',
-    author: '作者',
-    readings: '阅读数',
     status: '状态',
     actions: '操作',
     edit: '编辑',
@@ -115,5 +107,22 @@ export default {
     close: '关闭',
     closeOthers: '关闭其它',
     closeAll: '关闭所有'
+  },
+  system_manager: {
+    user_manager: {
+      login_name: '登录名',
+      truename: '真实姓名',
+      phone: '电话',
+      password: '密码',
+      user_type: '用户类型',
+      email: '邮箱',
+      nick_name: '昵称',
+      login_num: '登录次数',
+      status: '状态',
+      avatar: '头像',
+      desc: '简介',
+      last_login_time: '最后一次登录时间',
+      create_time: '创建时间'
+    }
   }
 }
