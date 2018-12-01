@@ -11,6 +11,7 @@ const user = {
     avatar: '',
     introduction: '',
     roles: [],
+    user_routers: [],
     setting: {
       articlePlatform: []
     }
@@ -40,6 +41,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_ROUTERS: (state, user_routers) => {
+      state.user_routers = user_routers
     }
   },
 
@@ -71,6 +75,11 @@ const user = {
             commit('SET_ROLES', data.roleList)
           } else {
             reject('getInfo: roles must be a non-null array !')
+          }
+          if (data.routers && data.routers.length > 0) {
+            commit('SET_ROUTERS', data.routers)
+          } else {
+            reject('getInfo: routers must be a non-null array !')
           }
           commit('SET_NAME', data.trueName)
           commit('SET_AVATAR', data.avatar)
@@ -131,7 +140,7 @@ const user = {
           commit('SET_NAME', data.trueName)
           commit('SET_AVATAR', data.avatar)
           commit('SET_INTRODUCTION', data.desc)
-          dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
+          dispatch('GenerateRoutes', data.routers) // 动态修改权限后 重绘侧边菜单
           resolve()
         })
       })

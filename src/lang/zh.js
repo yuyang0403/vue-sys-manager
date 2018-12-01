@@ -2,11 +2,6 @@ export default {
   route: {
     dashboard: '首页',
     introduction: '简述',
-    documentation: '文档',
-    guide: '引导页',
-    permission: '权限测试页',
-    pagePermission: '页面权限',
-    directivePermission: '指令权限',
     icons: '图标',
     components: '组件',
     componentIndex: '介绍',
@@ -19,25 +14,8 @@ export default {
     dropzone: 'Dropzone',
     sticky: 'Sticky',
     countTo: 'CountTo',
-    componentMixin: '小组件',
-    backToTop: '返回顶部',
-    dragDialog: '拖拽 Dialog',
-    dragSelect: '拖拽 Select',
-    dragKanban: '可拖拽看板',
-    charts: '图表',
-    keyboardChart: '键盘图表',
-    lineChart: '折线图',
-    mixChart: '混合图表',
     example: '综合实例',
-    nested: '路由嵌套',
-    menu1: '菜单1',
-    'menu1-1': '菜单1-1',
-    'menu1-2': '菜单1-2',
-    'menu1-2-1': '菜单1-2-1',
-    'menu1-2-2': '菜单1-2-2',
-    'menu1-3': '菜单1-3',
-    menu2: '菜单2',
-    Table: 'Table',
+    system_manager: '系统管理',
     dynamicTable: '动态Table',
     dragTable: '拖拽Table',
     inlineEditTable: 'Table内编辑',
@@ -53,16 +31,9 @@ export default {
     page401: '401',
     page404: '404',
     errorLog: '错误日志',
-    excel: 'Excel',
-    exportExcel: 'Export Excel',
-    selectExcel: 'Export Selected',
-    uploadExcel: 'Upload Excel',
-    zip: 'Zip',
-    exportZip: 'Export Zip',
-    theme: '换肤',
-    clipboardDemo: 'Clipboard',
-    i18n: '国际化',
-    externalLink: '外链'
+    user_manager: '用户管理',
+    role_manager: '角色管理',
+    router_manager: '权限管理'
   },
   navbar: {
     logOut: '退出登录',
@@ -81,17 +52,9 @@ export default {
     thirdparty: '第三方登录',
     thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
   },
-  documentation: {
-    documentation: '文档',
-    github: 'Github 地址'
-  },
   permission: {
     roles: '你的权限',
     switchRoles: '切换权限'
-  },
-  guide: {
-    description: '引导页对于一些第一次进入项目的人很有用，你可以简单介绍下项目的功能。本 Demo 是基于',
-    button: '打开引导'
   },
   components: {
     documentation: '文档',

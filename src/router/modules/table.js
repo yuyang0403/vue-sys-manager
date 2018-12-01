@@ -3,50 +3,33 @@
 import Layout from '@/views/layout/Layout'
 
 const tableRouter = {
-  path: '/table',
+  path: '/system_manager',
   component: Layout,
   redirect: '/table/complex-table',
-  name: 'Table',
+  name: 'system_manager',
   meta: {
-    title: 'Table',
+    code: 'system_manager',
+    title: 'system_manager',
     icon: 'table'
   },
   children: [
     {
-      path: 'dynamic-table',
-      component: () => import('@/views/table/dynamicTable/index'),
-      name: 'DynamicTable',
-      meta: { title: 'dynamicTable' }
-    },
-    {
-      path: 'drag-table',
-      component: () => import('@/views/table/dragTable'),
-      name: 'DragTable',
-      meta: { title: 'dragTable' }
-    },
-    {
-      path: 'inline-edit-table',
-      component: () => import('@/views/table/inlineEditTable'),
-      name: 'InlineEditTable',
-      meta: { title: 'inlineEditTable' }
-    },
-    {
-      path: 'tree-table',
-      component: () => import('@/views/table/treeTable/treeTable'),
-      name: 'TreeTableDemo',
-      meta: { title: 'treeTable' }
-    },
-    {
-      path: 'custom-tree-table',
-      component: () => import('@/views/table/treeTable/customTreeTable'),
-      name: 'CustomTreeTableDemo',
-      meta: { title: 'customTreeTable' }
-    },
-    {
-      path: 'complex-table',
+      path: 'user-manager',
       component: () => import('@/views/table/complexTable'),
-      name: 'ComplexTable',
-      meta: { title: 'complexTable' }
+      name: 'user-manager',
+      meta: { code: 'user_manager', title: 'user_manager', icon: 'user' }
+    },
+    {
+      path: 'role-manager',
+      component: () => import('@/views/table/complexTable'),
+      name: 'role-manager',
+      meta: { code: 'role_manager', title: 'role_manager', icon: 'peoples' }
+    },
+    {
+      path: 'router-manager',
+      component: () => import('@/views/table/complexTable'),
+      name: 'router-manager',
+      meta: { code: 'router_manager', title: 'router_manager', icon: 'people' }
     }
   ]
 }

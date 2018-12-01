@@ -7,12 +7,16 @@ import { getToken } from '@/utils/auth' // getToken from cookie
 
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
-// permission judge function
-function hasPermission(roles, permissionRoles) {
-  if (roles.indexOf('admin') >= 0) return true // admin permission passed directly
-  if (!permissionRoles) return true
-  return roles.some(role => permissionRoles.indexOf(role) >= 0)
-}
+/**
+ * @param {该用户所有角色} roleList
+ * @param {该用户所有的路由} routers
+ * @param {前端每一个路由} routerCode
+
+function hasPermission(roleList, routers, routerCode) {
+  if (roleList.indexOf('superadmin') >= 0) return true // admin permission passed directly
+  if (!routerCode) return true
+  return routers.some(code => routerCode === code)
+} */
 
 const whiteList = ['/login', '/auth-redirect']// no redirect whitelist
 
@@ -26,8 +30,8 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          const roles = res.data.data.roleList // note: roles must be a array! such as: ['editor','develop']
-          store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
+          const routers = store.getters.user_routers // 该用户所有的路由权限
+          store.dispatch('GenerateRoutes', { routers }).then(() => { // 根据roles权限生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
@@ -38,13 +42,16 @@ router.beforeEach((to, from, next) => {
           })
         })
       } else {
-        // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
-        if (hasPermission(store.getters.roles, to.meta.roles)) {
+        next()
+        /* // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
+        console.log(store.getters.user_routers)
+        if (hasPermission(store.getters.roles,store.getters.user_routers, to.meta.code)) {
           next()
         } else {
           next({ path: '/401', replace: true, query: { noGoBack: true }})
         }
         // 可删 ↑
+        */
       }
     }
   } else {
