@@ -152,9 +152,16 @@
           <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.desc" type="textarea" placeholder="用户描述"/>
         </el-form-item>
 
-        <el-select ref="dragSelect" v-model="selectVal" v-bind="$attrs" class="drag-select" multiple v-on="$listeners">
-          <slot/>
-        </el-select>
+        <el-form-item :label="$t('system_manager.user_manager.roleList')">
+          <el-drag-select v-model="temp.roleList" style="width:500px;" multiple placeholder="请选择">
+            <el-option v-for="item in calendarRoleOptions" :label="item.display_name" :value="item.key" :key="item.display_name" />
+          </el-drag-select>
+
+          <div style="margin-top:30px;">
+            <el-tag v-for="item of value" :key="item" style="margin-right:15px;">{{ item }}</el-tag>
+          </div>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
@@ -180,6 +187,8 @@ import { fetchUserList, fetchPv, createUser, updateUser } from '@/api/system_man
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import ElDragSelect from '@/components/DragSelect' // base on element-ui
+import { fetchRoleList } from '@/api/system_manager/common/roleSelect'
 
 const calendarStatusOptions = [
   { key: '1', display_name: '有效' },
@@ -189,6 +198,19 @@ const calendarTypeOptions = [
   { key: '1', display_name: '系统用户' },
   { key: '0', display_name: '不可删除用户' }
 ]
+
+const calendarRoleOptions = []
+fetchRoleList().then(response => {
+  const data = response.data.data
+  for (let i = 0; i < data.length; i++) {
+    calendarRoleOptions.push({ key: data[i].code, display_name: data[i].name })
+  }
+
+  // Just to simulate the time of the request
+  setTimeout(() => {
+    this.listLoading = false
+  }, 1.5 * 1000)
+})
 
 // arr to obj ,such as { CN : "China", US : "USA" }
 const calendarStatusKeyValue = calendarStatusOptions.reduce((acc, cur) => {
@@ -203,7 +225,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, ElDragSelect },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -230,11 +252,13 @@ export default {
       importanceOptions: [1, 2, 3],
       calendarStatusOptions,
       calendarTypeOptions,
+      calendarRoleOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       showReviewer: false,
       temp: {
         id: undefined,
-        status: '1'
+        status: '1',
+        roleList: '1'
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -342,7 +366,8 @@ export default {
     resetTemp() {
       this.temp = {
         status: '1',
-        type: ''
+        type: '',
+        roleList: ''
       }
     },
     handleCreate() {
@@ -358,6 +383,7 @@ export default {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
           this.temp.author = 'vue-element-admin'
+          this.temp.roleList = '1'
           createUser(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false

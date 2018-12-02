@@ -38,9 +38,17 @@ service.interceptors.response.use(
       switch (error.response.status) {
         case 100001:
           error.message = '客户端token失效请重新登录'
+          this.request({
+            url: '/user-login/login/logout',
+            method: 'post'
+          })
           break
         case 100002:
           error.message = 'token验证失败 请重新登录'
+          this.request({
+            url: '/user-login/login/logout',
+            method: 'post'
+          })
           break
         case 100003:
           error.message = '登录失败，用户名或者密码有误！'

@@ -121,6 +121,7 @@ export default {
       status: '状态',
       avatar: '头像',
       desc: '简介',
+      roleList: '角色',
       last_login_time: '最后一次登录时间',
       create_time: '创建时间'
     }

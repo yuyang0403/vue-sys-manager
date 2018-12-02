@@ -14,30 +14,26 @@
 
 <script>
 import ElDragSelect from '@/components/DragSelect' // base on element-ui
+import { fetchRoleList } from '@/api/system_manager/common/roleSelect'
 
 export default {
   name: 'DragSelectDemo',
   components: { ElDragSelect },
   data() {
-    return {
-      value: ['Apple', 'Banana', 'Orange'],
-      options: [{
-        value: 'Apple',
-        label: 'Apple'
-      }, {
-        value: 'Banana',
-        label: 'Banana'
-      }, {
-        value: 'Orange',
-        label: 'Orange'
-      }, {
-        value: 'Pear',
-        label: 'Pear'
-      }, {
-        value: 'Strawberry',
-        label: 'Strawberry'
-      }]
-    }
+    var result = { value: [], options: [] }
+    // 请求数据
+    fetchRoleList().then(response => {
+      const data = response.data.data
+      for (let i = 0; i < data.length; i++) {
+        result.options.push({ label: data[i].name, value: data[i].code })
+      }
+
+      // Just to simulate the time of the request
+      setTimeout(() => {
+        this.listLoading = false
+      }, 1.5 * 1000)
+    })
+    return result
   }
 }
 </script>
