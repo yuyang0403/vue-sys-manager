@@ -152,7 +152,7 @@
           <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.desc" type="textarea" placeholder="用户描述"/>
         </el-form-item>
 
-        <el-form-item :label="$t('system_manager.user_manager.roleList')">
+        <el-form-item :label="$t('system_manager.user_manager.roleList')" prop="roleList">
           <el-drag-select v-model="temp.roleList" style="width:500px;" multiple placeholder="请选择">
             <el-option v-for="item in calendarRoleOptions" :label="item.display_name" :value="item.key" :key="item.display_name" />
           </el-drag-select>
@@ -258,7 +258,7 @@ export default {
       temp: {
         id: undefined,
         status: '1',
-        roleList: '1'
+        roleList: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -316,6 +316,9 @@ export default {
             }
             callback(errors)
           } }
+        ],
+        roleList: [
+          { required: true, message: '请选择角色', trigger: 'change' }
         ]
       },
       downloadLoading: false
@@ -366,7 +369,7 @@ export default {
     resetTemp() {
       this.temp = {
         status: '1',
-        type: '',
+        type: '1',
         roleList: ''
       }
     },
@@ -381,9 +384,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          this.temp.roleList = '1'
+          this.temp.status = '1'
           createUser(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
