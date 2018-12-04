@@ -82,7 +82,7 @@
 
       <el-table-column :label="$t('system_manager.user_manager.avatar')" >
         <template slot-scope="scope">
-          <img :src="scope.row.avatar" width="100%">
+          <img :src="scope.row.avatar" width="30%">
         </template>
       </el-table-column>
 
@@ -384,7 +384,6 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.status = '1'
           createUser(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false

@@ -10,9 +10,10 @@ const service = axios.create({
   timeout: 5000, // request timeout
   transformRequest: [function(data) {
     data = Qs.stringify(data)
+    console.log(data)
     return data
-  }],
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  }]
+  // headers: { 'Content-Type': 'application/json;charset=UTF-8' }
 })
 
 // request interceptor
@@ -58,6 +59,9 @@ service.interceptors.response.use(
           break
         case 400:
           error.message = '请求参数有误！'
+          break
+        case 415:
+          error.message = '请求发生错误！'
           break
         default:
           error.message = error.response.data.errorMessage
