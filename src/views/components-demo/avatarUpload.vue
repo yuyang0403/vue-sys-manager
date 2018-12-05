@@ -1,9 +1,5 @@
 <template>
   <div class="components-container">
-    <code>This is based on
-      <a class="link-type" href="//github.com/dai-siki/vue-image-crop-upload"> vue-image-crop-upload</a>.
-      {{ $t('components.imageUploadTips') }}
-    </code>
 
     <pan-thumb :image="image"/>
 
@@ -12,10 +8,10 @@
 
     <image-cropper
       v-show="imagecropperShow"
-      :width="300"
-      :height="300"
+      :width="100"
+      :height="100"
       :key="imagecropperKey"
-      url="https://httpbin.org/post"
+      url="上传地址"
       lang-type="en"
       @close="close"
       @crop-upload-success="cropSuccess"/>
@@ -33,7 +29,7 @@ export default {
     return {
       imagecropperShow: false,
       imagecropperKey: 0,
-      image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191'
+      image: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80'
     }
   },
   methods: {

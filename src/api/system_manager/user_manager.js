@@ -8,6 +8,14 @@ export function fetchUserList(query) {
   })
 }
 
+export function fetchUserRole(userId) {
+  return request({
+    url: '/user-manager/role/manager/findRoleListByUserId',
+    method: 'post',
+    params: { userId }
+  })
+}
+
 export function fetchUser(id) {
   return request({
     url: '/article/detail',
@@ -26,7 +34,7 @@ export function fetchPv(pv) {
 
 export function createUser(data) {
   return request({
-    url: '/user-manager/user/manager/createUser',
+    url: '/user-manager/user/manager/createOrUpdateUser',
     method: 'post',
     data
   })
@@ -34,7 +42,7 @@ export function createUser(data) {
 
 export function updateUser(data) {
   return request({
-    url: '/article/update',
+    url: '/user-manager/user/manager/createOrUpdateUser',
     method: 'post',
     data
   })

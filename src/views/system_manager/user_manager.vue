@@ -2,15 +2,10 @@
   <div class="app-container">
     <!-- 过滤条件 -->
     <div class="filter-container">
-      <el-input :placeholder="$t('table.title')" v-model="listQuery.title" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item"/>
-      </el-select>
-      <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key"/>
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"/>
+      <el-input :placeholder="$t('system_manager.user_manager.login_name')" v-model="listQuery.loginName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="$t('system_manager.user_manager.phone')" v-model="listQuery.phone" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-select v-model="listQuery.status" :placeholder="$t('system_manager.user_manager.status')" clearable class="filter-item" style="width: 130px">
+        <el-option v-for="item in calendarStatusOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
@@ -183,7 +178,7 @@
 </template>
 
 <script>
-import { fetchUserList, fetchPv, createUser, updateUser } from '@/api/system_manager/user_manager'
+import { fetchUserList, fetchUserRole, fetchPv, createUser, updateUser } from '@/api/system_manager/user_manager'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -191,12 +186,12 @@ import ElDragSelect from '@/components/DragSelect' // base on element-ui
 import { fetchRoleList } from '@/api/system_manager/common/roleSelect'
 
 const calendarStatusOptions = [
-  { key: '1', display_name: '有效' },
-  { key: '0', display_name: '无效' }
+  { key: 1, display_name: '有效' },
+  { key: 0, display_name: '无效' }
 ]
 const calendarTypeOptions = [
-  { key: '1', display_name: '系统用户' },
-  { key: '0', display_name: '不可删除用户' }
+  { key: 1, display_name: '系统用户' },
+  { key: 0, display_name: '不可删除用户' }
 ]
 
 const calendarRoleOptions = []
@@ -257,8 +252,7 @@ export default {
       showReviewer: false,
       temp: {
         id: undefined,
-        status: '1',
-        roleList: ''
+        roleList: []
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -368,9 +362,9 @@ export default {
     },
     resetTemp() {
       this.temp = {
-        status: '1',
-        type: '1',
-        roleList: ''
+        status: 1,
+        type: 1,
+        roleList: []
       }
     },
     handleCreate() {
@@ -399,17 +393,28 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+      fetchUserRole(this.temp.id).then(response => {
+        const data = response.data.data
+        this.temp.roleList = []
+        for (let i = 0; i < data.length; i++) {
+          this.temp.roleList[i] = data[i].code
+        }
+        this.temp.timestamp = new Date(this.temp.timestamp)
+        this.dialogStatus = 'update'
+        this.dialogFormVisible = true
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
       })
     },
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
+          console.log(tempData)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateUser(tempData).then(() => {
             for (const v of this.list) {
