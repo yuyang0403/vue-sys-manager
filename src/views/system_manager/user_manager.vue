@@ -96,10 +96,8 @@
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">{{ $t('table.publish') }}
-          </el-button>
 
-          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">{{ $t('table.delete') }}
+          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'delete')">{{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -178,7 +176,7 @@
 </template>
 
 <script>
-import { fetchUserList, fetchUserRole, fetchPv, createUser, updateUser } from '@/api/system_manager/user_manager'
+import { fetchUserList, fetchUserRole, fetchPv, createUser, updateUser, modifyStatus } from '@/api/system_manager/user_manager'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -340,11 +338,21 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
+      if (row.userType === 0) {
+        this.$message({
+          message: '该用户无法删除',
+          type: 'warning'
+        })
+        return
+      }
+      // 删除
+      modifyStatus({ userId: row.id, type: status }).then(response => {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.getList()
       })
-      row.status = status
     },
     sortChange(data) {
       const { prop, order } = data
@@ -387,6 +395,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getList()
           })
         }
       })
@@ -414,7 +423,6 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          console.log(tempData)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateUser(tempData).then(() => {
             for (const v of this.list) {
@@ -431,19 +439,28 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getList()
           })
         }
       })
     },
     handleDelete(row) {
+      console.log(row)
+      if (row.type === 0) {
+        this.$notify({
+          title: '该用户不可删除',
+          message: '该用户不可删除',
+          type: 'warn',
+          duration: 2000
+        })
+        return
+      }
       this.$notify({
         title: '成功',
         message: '删除成功',
         type: 'success',
         duration: 2000
       })
-      const index = this.list.indexOf(row)
-      this.list.splice(index, 1)
     },
     handleFetchPv(pv) {
       fetchPv(pv).then(response => {
@@ -454,8 +471,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
+        const tHeader = ['id', 'loginName', 'trueName', 'nickName', 'phone', 'email', 'loginNum', 'status', 'avatar', 'userType', 'lastLoginTime', 'createTime']
+        const filterVal = ['id', 'loginName', 'trueName', 'nickName', 'phone', 'email', 'loginNum', 'status', 'avatar', 'userType', 'lastLoginTime', 'createTime']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

@@ -47,3 +47,11 @@ export function updateUser(data) {
     data
   })
 }
+
+export function modifyStatus(data) {
+  return request({
+    url: '/user-manager/user/manager/modifyStatus',
+    method: 'post',
+    data
+  })
+}
