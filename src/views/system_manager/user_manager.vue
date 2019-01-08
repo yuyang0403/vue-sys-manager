@@ -149,7 +149,10 @@
           <el-drag-select v-model="temp.roleList" style="width:500px;" multiple placeholder="请选择">
             <el-option v-for="item in calendarRoleOptions" :label="item.display_name" :value="item.key" :key="item.display_name" />
           </el-drag-select>
-
+          <multTreeDialog v-if= "isShowPopupRole" v-model="isShowPopupRole" :dialog-context="dialogRoleContext" :popup-arr="popupRoleArr" @saveRole="saveRole"/>
+          <el-form-item label="角色" prop="roleList">
+            <el-input v-model="temp.roleList" :disabled="false" :title="角色列表" type="text" placeholder="请选择角色" @focus="isShowPopupRole = !isShowPopupRole" @click.native="focus('roleList')" @blur="blur(formData.brandName, 'roleList')"/>
+          </el-form-item>
           <div style="margin-top:30px;">
             <el-tag v-for="item of value" :key="item" style="margin-right:15px;">{{ item }}</el-tag>
           </div>
@@ -182,7 +185,7 @@ import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import ElDragSelect from '@/components/DragSelect' // base on element-ui
 import { fetchRoleList } from '@/api/system_manager/common/roleSelect'
-
+import multTreeDialog from '@/views/components/multTreeDialog'
 const calendarStatusOptions = [
   { key: 1, display_name: '有效' },
   { key: 0, display_name: '无效' }
@@ -218,7 +221,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination, ElDragSelect },
+  components: { Pagination, ElDragSelect, multTreeDialog },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -260,6 +263,13 @@ export default {
       },
       dialogPvVisible: false,
       pvData: [],
+      dialogRoleContext: {
+        title: '角色',
+        placeholder: '请输入角色名称',
+        type: 'roleList'
+      },
+      isShowPopupRole: false, // 是否显示角色dialog
+      popupRoleArr: [], // 角色props
       rules: {
         status: [
           { required: true, message: '请选择用户状态', trigger: 'change' }
